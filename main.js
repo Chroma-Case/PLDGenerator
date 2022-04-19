@@ -6,7 +6,7 @@ const carbone = require('carbone');
 var data = {   
     stories: [
         {
-            number: "1.1",
+            num: "1.1",
             name: 'faire un tour',
             actor: 'Louis Auzuret',
             need: 'dégourdir les jambes',
@@ -15,7 +15,7 @@ var data = {
             charge: '30 minutes ouvrées',
         },
         {
-            number: "3.19",
+            num: "3.19",
             name: 'Non pertinent',
             actor: 'Zoe Roux',
             need: 'Je veux avoir un répertoire avec plusieurs branches de développement et de l\'intégration continue',
@@ -75,7 +75,83 @@ var data = {
                 comment: 'Première version'
             }
         ]
-    }
+    },
+    projects: [
+        {
+            name: 'Front Web',
+            tasks: [
+                {
+                    num: '1',
+                    name: 'Landing Page',
+                    stories: [
+                        {
+                            num: '1.1',
+                            name: 'Description',
+                        },
+                        {
+                            num: '1.2',
+                            name: 'FAQ + Doc API',
+                        },
+                        {
+                            num: '1.3',
+                            name: 'Téléchargement',
+                        },
+                        {
+                            num: '1.4',
+                            name: 'Contact',
+                        },
+                    ],
+                },
+                {
+                    num: '2',
+                    name: 'Authentification',
+                    stories: [
+                        {
+                            num: '2.1',
+                            name: 'Connexion',
+                        },
+                        {
+                            num: '2.2',
+                            name: 'Inscription',
+                        },
+                    ],
+                },
+            ]
+        },
+        {
+            name: 'Backend',
+            tasks: [
+                {
+                    num: '1',
+                    name: 'API',
+                    stories: [
+                        {
+                            num: '1.1',
+                            name: 'Récupération des données',
+                        },
+                        {
+                            num: '1.2',
+                            name: 'Gestion des données',
+                        },
+                        {
+                            num: '1.3',
+                            name: 'Gestion des erreurs',
+                        },
+                    ],
+                },
+                {
+                    num: '2',
+                    name: 'Bases de données',
+                    stories: [
+                        {
+                            num: '2.1',
+                            name: 'Création des tables',
+                        },
+                    ],
+                },
+            ]
+        },
+    ]
 };
 
 // Generate a report using the sample template provided by carbone module
