@@ -1,0 +1,40 @@
+# sets the settings for correct pld generation
+
+
+repository:
+  owner: 'Chroma-Case'
+  repo: 'Chromacase'
+  milestone: 'Sprint 1: Test & Learn'
+members:
+  - name: 'Louis Auzuret'
+    ghUsername: 'GitBluub'
+  - name: 'Zoe Roux'
+    ghUsername: 'AnonymusRaccoon'
+  - name: 'Arthur Jamet'
+    ghUsername: 'Arthi-chaud'
+  - name: 'Clément Le Bihan'
+    ghUsername: 'Octopus773' 
+doc:
+  title: "PLD - Sprint Test & Learn"
+  object: "PLD du sprint Test & Learn"
+  author: "Clément LE BIHAN"
+  manager: "Zoe Roux"
+  email: "zoe.roux@epitech.eu"
+  keywords: 'User stories, fonctionnalités, tâches, sprint, DoD'
+  promo: '2024'
+  versions: 
+    - date: '12-04-2022'
+      num: '0.6.4'
+      author: 'Arthur JAMET'
+      section: 'Toutes'
+      comment: 'Création du modèle'
+    
+    - date: '15-04-2022'
+      num: '1.0.0'
+      author: 'Clément LE BIHAN'
+      section: 'Toutes'
+      comment: 'Première version'
+progressReport:
+  summary: 'Ce mois-ci, nous avons fait un total de 3.19 km'
+  blockingPoints: 'Il y a des points qui nous empêchent de faire nos devoirs'
+  conclusion: 'Nous allons y arriver avec brio !!!!'

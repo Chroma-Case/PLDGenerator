@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "octokit": "^1.7.1"
+  }
+}
