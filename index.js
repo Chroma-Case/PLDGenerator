@@ -1,11 +1,14 @@
 import { Octokit, App } from "octokit";
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
+import 'dotenv/config'
+
+const octokit = new Octokit({
+    userAgent: "my-app/v1.2.3",
+    auth: process.env.GITHUB_PERSONAL_TOKEN
+});
 
 const getIssues = async (owner, repo) => {
-    const octokit = new Octokit({
-        userAgent: "my-app/v1.2.3",
-    });
     
     return (await octokit.request("GET /repos/{owner}/{repo}/issues", {
         owner: "Chroma-Case",
@@ -37,13 +40,32 @@ const getSettings = (configFile) => {
     }
 }
 
+const getProjects = async (owner, repo) => {
+    return (await octokit.rest.projects.listForRepo({
+        owner,
+        repo,
+      }))
+}
+
+const getProjectColumns = async (id) => {
+    return (await octokit.rest.projects.listColumns({
+        project_id: id,
+      }))
+}
+
+
+const getColumnsCard = async (id) => {
+    return (await octokit.rest.projects.listCards({
+            column_id: id,
+          }))
+}
+
 export const getDataFromIssues = async (configFile) => {
 
     let data = getSettings(configFile);
   
     const issues = (await getIssues()).filter(issue => issue.milestone?.title === data.repository.milestone);
-
-    data.stories = issues.map(issue => ({
+    const stories = issues.map(issue => ({
         num: issue.number,
         name: issue.title,
         actor: issue.assignees.map(assignee => assignee.login).join(', '),
@@ -52,14 +74,22 @@ export const getDataFromIssues = async (configFile) => {
         dod: issue.labels.map(label => label.name).join(', '),
         charge: '2 J/H'
     }));
-
+    const projects = (await getProjects("Chroma-Case", "Chromacase")).data
+    const projectsInfo = await Promise.all(projects.map(async (i) => {
+        const columns = (await getProjectColumns(i.id)).data
+        const tasks = await Promise.all(columns.map(async (column, j) => {
+            const issueNumbers = (await getColumnsCard(column.id)).data.filter(x => x.content_url != undefined).map(x => x.content_url).map(x => parseInt(x.split("/").pop()))
+            const tStories = stories.filter(x => issueNumbers.includes(x.num)).map(x => {return {name: x.name, num: x.num}})
+            return {num: j + 1, name: column.name, stories: tStories}
+        }))
+        return { name: i.name, tasks}
+    }))
+    data.stories = stories
+    data.projects = projectsInfo
     data.progressReport.members.map(m => {
         const memberIssues = issues.filter(i => i.assignees.map(a => a.login).includes(m.ghUsername));
         m.tasks = memberIssues.map(issue => ({name: issue.title}));
         return m;
     })
-
-    
-
     return data;
 }

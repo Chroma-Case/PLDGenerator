@@ -2,6 +2,7 @@
   "type": "module",
   "dependencies": {
     "carbone": "^3.2.3",
+    "dotenv": "^16.0.0",
     "js-yaml": "^4.1.0",
     "octokit": "^1.7.1"
   }
