@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "carbone": "^3.2.3",
+    "js-yaml": "^4.1.0",
+    "octokit": "^1.7.1"
+  }
+}

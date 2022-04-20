@@ -1,18 +1,6 @@
 import { Octokit, App } from "octokit";
-const yaml = require('js-yaml');
-const fs   = require('fs');
-
-/*
-{
-            num: "1.1",
-            name: 'faire un tour',
-            actor: 'Louis Auzuret',
-            need: 'dégourdir les jambes',
-            description: 'Il faut faire un tour dans la maison de Louis Auzuret pour se dégourdir les jambes.',
-            dod: 'Il faut au moins faire 3km',
-            charge: '30 minutes ouvrées',
-        },
-*/
+import * as yaml from 'js-yaml';
+import * as fs from 'fs';
 
 const getIssues = async (owner, repo) => {
     const octokit = new Octokit({
@@ -25,10 +13,10 @@ const getIssues = async (owner, repo) => {
     })).data;
 };
 
-const getSettings = async (configFile) => {
-    const config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8'));
+const getSettings = (configFile) => {
+    const config = yaml.load(fs.readFileSync(configFile, 'utf8'));
     return {
-        milestone: config.milestone,
+        repository: config.repository,
         doc: {
             title: config.doc.title,
             object: config.doc.object,
@@ -37,7 +25,7 @@ const getSettings = async (configFile) => {
             email: config.doc.email,
             keywords: config.doc.keywords,
             promo: config.doc.promo,
-            ver: config.doc.ver,
+            ver: config.doc.versions,
         },
         progressReport: {
             summary: config.progressReport.summary,
@@ -49,11 +37,11 @@ const getSettings = async (configFile) => {
     }
 }
 
-const getDataFromIssues = async () => {
+export const getDataFromIssues = async (configFile) => {
 
-    let data = getSettings('../settings.yaml');
+    let data = getSettings(configFile);
   
-    const issues = await getIssues().filter(issue => issue.milestone.title === data.milestone.title);
+    const issues = (await getIssues()).filter(issue => issue.milestone?.title === data.repository.milestone);
 
     data.stories = issues.map(issue => ({
         num: issue.number,
@@ -65,18 +53,13 @@ const getDataFromIssues = async () => {
         charge: '2 J/H'
     }));
 
-    data.progressReport.members = data.members.map(m => {
-        const memberIssues = issues.filter(i => i.assignees === m.ghUsername);
-        if (member) {
-            m.tasks = member.tasks;
-        }
+    data.progressReport.members.map(m => {
+        const memberIssues = issues.filter(i => i.assignees.map(a => a.login).includes(m.ghUsername));
+        m.tasks = memberIssues.map(issue => ({name: issue.title}));
         return m;
     })
 
     
 
-    
+    return data;
 }
-
-
-getDataFromIssues();
