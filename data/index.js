@@ -28,6 +28,7 @@ const getIssues = async (owner, repo) => {
 const getSettings = async (configFile) => {
     const config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8'));
     return {
+        milestone: config.milestone,
         doc: {
             title: config.doc.title,
             object: config.doc.object,
@@ -44,27 +45,35 @@ const getSettings = async (configFile) => {
             conclusion: config.progressReport.conclusion,
             members: config.members.map(m => ({name: m.name, ghUsername: m.ghUsername, tasks: []})),
         },
+        projects: []
     }
 }
 
 const getDataFromIssues = async () => {
-  
-    const issues = await getIssues().filter(issue => issue.milestone.title === "Sprint 1: Test & Learn");
 
-    let data = {
-        stories: [],
-        progressReport: {
-            summary: '',
-            blockingPoints: '',
-            conclusion: '',
-            members: [],
-        },
-        doc: {
-            title: 'PLD - Sprint Test & Learn',
-            object: 'PLD du sprint Test & Learn',
+    let data = getSettings('../settings.yaml');
+  
+    const issues = await getIssues().filter(issue => issue.milestone.title === data.milestone.title);
+
+    data.stories = issues.map(issue => ({
+        num: issue.number,
+        name: issue.title,
+        actor: issue.assignees.map(assignee => assignee.login).join(', '),
+        need: 'machin',
+        description: issue.body,
+        dod: issue.labels.map(label => label.name).join(', '),
+        charge: '2 J/H'
+    }));
+
+    data.progressReport.members = data.members.map(m => {
+        const memberIssues = issues.filter(i => i.assignees === m.ghUsername);
+        if (member) {
+            m.tasks = member.tasks;
         }
-    };
-    }
+        return m;
+    })
+
+    
 
     
 }
