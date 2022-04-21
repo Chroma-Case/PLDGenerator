@@ -38,11 +38,24 @@ RUN tar -zxvf LibreOffice_7.0.4.2_Linux_x86-64_deb.tar.gz
 # Install LibreOffice
 RUN dpkg -i LibreOffice_7.0.4.2_Linux_x86-64_deb/DEBS/*.deb
 
-RUN apt-get install -y nodejs npm
+RUN apt-get install -y curl
 
-RUN npm install carbone
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+
+RUN apt-get -y install nodejs
 
 RUN apt-get install -y vim
 
-CMD  cd /carbone && node /carbone/main.js
+COPY package.json /carbone/
+COPY package-lock.json /carbone/
+
+WORKDIR /carbone
+
+RUN npm install
+
+COPY . /carbone
+
+RUN  node /carbone/main.js
+
+CMD cp result.odt /out
 

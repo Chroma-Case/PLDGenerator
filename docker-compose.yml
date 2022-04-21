@@ -3,4 +3,4 @@ services:
   carbone:
     build: .
     volumes:
-      - .:/carbone
+      - .:/out

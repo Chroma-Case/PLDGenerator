@@ -11,8 +11,8 @@ const octokit = new Octokit({
 const getIssues = async (owner, repo) => {
     
     return (await octokit.request("GET /repos/{owner}/{repo}/issues", {
-        owner: "Chroma-Case",
-        repo: "Chromacase",
+        owner: owner,
+        repo: repo,
     })).data;
 };
 
@@ -44,28 +44,29 @@ const getProjects = async (owner, repo) => {
     return (await octokit.rest.projects.listForRepo({
         owner,
         repo,
-      }))
+      }));
 }
 
 const getProjectColumns = async (id) => {
     return (await octokit.rest.projects.listColumns({
         project_id: id,
-      }))
+      }));
 }
 
 
 const getColumnsCard = async (id) => {
     return (await octokit.rest.projects.listCards({
             column_id: id,
-          }))
+          }));
 }
 
 export const getDataFromIssues = async (configFile) => {
 
     let data = getSettings(configFile);
   
-    const issues = (await getIssues()).filter(issue => issue.milestone?.title === data.repository.milestone);
+    const issues = (await getIssues(data.repository.owner, data.repository.repo)).filter(issue => issue.milestone?.title === data.repository.milestone);
     const stories = issues.map(issue => ({
+        id: issue.number,
         num: issue.number,
         name: issue.title,
         actor: data.progressReport.members.filter(member => member.ghUsername === issue.assignee.login)[0].name,
@@ -74,9 +75,9 @@ export const getDataFromIssues = async (configFile) => {
         dod: issue.labels.map(label => label.name).join(', '),
         charge: '2 J/H'
     }));
-    const projects = (await getProjects("Chroma-Case", "Chromacase")).data
+    const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
     const projectsInfo = await Promise.all(projects.map(async (i) => {
-        const columns = (await getProjectColumns(i.id)).data
+        const columns = (await getProjectColumns(i.id)).data;
         const tasks = await Promise.all(columns.map(async (column, j) => {
             const issueNumbers = (await getColumnsCard(column.id)).data.filter(x => x.content_url != undefined).map(x => x.content_url).map(x => parseInt(x.split("/").pop()))
             const tStories = stories.filter(x => issueNumbers.includes(x.num)).map(x => {return {name: x.name, num: x.num}})
