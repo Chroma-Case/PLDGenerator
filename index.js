@@ -68,7 +68,7 @@ export const getDataFromIssues = async (configFile) => {
     const stories = issues.map(issue => ({
         num: issue.number,
         name: issue.title,
-        actor: issue.assignees.map(assignee => assignee.login).join(', '),
+        actor: data.progressReport.members.filter(member => member.ghUsername === issue.assignee.login)[0].name,
         need: 'machin',
         description: issue.body,
         dod: issue.labels.map(label => label.name).join(', '),

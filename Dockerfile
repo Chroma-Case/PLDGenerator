@@ -44,5 +44,5 @@ RUN npm install carbone
 
 RUN apt-get install -y vim
 
-CMD cp -r node_modules/ /carbone && cd /carbone && node /carbone/main.js
+CMD  cd /carbone && node /carbone/main.js
 
