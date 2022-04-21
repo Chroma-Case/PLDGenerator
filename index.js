@@ -130,7 +130,7 @@ export const getDataFromIssues = async (configFile) => {
             let inc = 0;
             stories.forEach(story => {
                 if (issueNumbers.includes(story.id)) {
-                    story.num = `${j + 1}.${inc++ + 1}`;
+                    story.num = `${i.name} - ${j + 1}.${inc++ + 1}`;
                 }
             });
 
