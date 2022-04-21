@@ -115,8 +115,8 @@ export const getDataFromIssues = async (configFile) => {
         name: issue.title,
         actor: parsed.actor,
         need: parsed.need,
-        description: parsed.description,
-        dod: parsed.dod,
+        description: parsed.description.split('\n').map(l => ({line: l})),
+        dod: parsed.dod.split('\n').map(l => ({line: l})),
         charge: parsed.timeCharge,
     }});
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
