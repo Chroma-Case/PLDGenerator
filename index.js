@@ -65,9 +65,9 @@ export const getDataFromIssues = async (configFile) => {
     let data = getSettings(configFile);
   
     const issues = (await getIssues(data.repository.owner, data.repository.repo)).filter(issue => issue.milestone?.title === data.repository.milestone);
-    const stories = issues.map(issue => ({
+    let stories = issues.map(issue => ({
         id: issue.number,
-        num: issue.number,
+        num: '',
         name: issue.title,
         actor: data.progressReport.members.filter(member => member.ghUsername === issue.assignee.login)[0].name,
         need: 'machin',
@@ -80,13 +80,30 @@ export const getDataFromIssues = async (configFile) => {
         const columns = (await getProjectColumns(i.id)).data;
         const tasks = await Promise.all(columns.map(async (column, j) => {
             const issueNumbers = (await getColumnsCard(column.id)).data.filter(x => x.content_url != undefined).map(x => x.content_url).map(x => parseInt(x.split("/").pop()))
-            const tStories = stories.filter(x => issueNumbers.includes(x.num)).map(x => {return {name: x.name, num: x.num}})
+            const tStories = stories.filter(x => issueNumbers.includes(x.id)).map((x, i) => ({name: x.name, id: x.id, num: `${j + 1}.${i + 1}`}));
+
+            // we're updating stories numbers to match the order of the tasks (depending on the project and label)
+            let inc = 0;
+            stories.forEach(story => {
+                if (issueNumbers.includes(story.id)) {
+                    story.num = `${j + 1}.${inc++ + 1}`;
+                }
+            });
+
             return {num: j + 1, name: column.name, stories: tStories}
         }))
         return { name: i.name, tasks}
     }))
-    data.stories = stories
-    data.projects = projectsInfo
+    data.stories = stories.sort((a, b) => {
+        // elements with num are at the start of the list
+        if (a.num != '' && b.num == '') return -1;
+        if (a.num == '' && b.num != '') return 1;
+        if (a.num == '' && b.num == '') return 0;
+        return a.num - b.num;
+    });
+    data.projects = projectsInfo.filter(pI => {
+        return pI.tasks.filter(t => t.stories.length > 0).length > 0;
+    });
     data.progressReport.members.map(m => {
         const memberIssues = issues.filter(i => i.assignees.map(a => a.login).includes(m.ghUsername));
         m.tasks = memberIssues.map(issue => ({name: issue.title}));
