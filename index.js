@@ -41,7 +41,7 @@ const parseIssueBody = (body) => {
     let data = {};
     lines.forEach((line, i) => {
         if (line.startsWith("###")) {
-            const section = sections[line.substring(4)];
+            const section = sections[line.substring(4).trim()];
             if (section) {
                 data[section] = getSectionValueFromBodyIssue(lines, i);
             }
