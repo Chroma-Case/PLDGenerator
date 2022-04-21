@@ -61,6 +61,7 @@ const getIssues = async (owner, repo) => {
 const getSettings = (configFile) => {
     const config = yaml.load(fs.readFileSync(configFile, 'utf8'));
     return {
+        members: config.members.map(m => ({name: m.name, ghUsername: m.ghUsername})),
         repository: config.repository,
         doc: {
             title: config.doc.title,
@@ -118,6 +119,7 @@ export const getDataFromIssues = async (configFile) => {
         description: parsed.description.split('\n').map(l => ({line: l})),
         dod: parsed.dod.split('\n').map(l => ({line: l})),
         charge: parsed.timeCharge,
+        assignees: issue.assignees.flatMap(a => data.members.filter(m => m.ghUsername === a.login).map(p => p.name)).join(', '),
     }});
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
     const projectsInfo = await Promise.all(projects.map(async (i) => {

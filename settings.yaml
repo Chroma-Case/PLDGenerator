@@ -30,11 +30,23 @@ doc:
       comment: 'Création du modèle'
     
     - date: '15-04-2022'
-      num: '1.0.0'
+      num: '0.7.2'
       author: 'Clément LE BIHAN'
       section: 'Toutes'
       comment: 'Première version'
+    
+    - date: '20-04-2022'
+      num: '0.8.1'
+      author: 'Zoe Roux'
+      section: 'Sommmaire'
+      comment: 'Ajout du sommmaire'
+
+    - date: '21-04-2022'
+      num: '1.0.0'
+      author: 'Clément Le Bihan'
+      section: 'Stories'
+      comment: 'Réparation de la partie description et Definition of Done'
 progressReport:
-  summary: 'Ce mois-ci, nous avons fait un total de 3.19 km'
-  blockingPoints: 'Il y a des points qui nous empêchent de faire nos devoirs'
-  conclusion: 'Nous allons y arriver avec brio !!!!'
+  summary: ''
+  blockingPoints: ''
+  conclusion: ''
