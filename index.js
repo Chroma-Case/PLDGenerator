@@ -8,6 +8,48 @@ const octokit = new Octokit({
     auth: process.env.GITHUB_PERSONAL_TOKEN
 });
 
+/*
+    Get the value that is under the ### <title> specified by lineNumber until finding another title or the end of the body
+*/
+const getSectionValueFromBodyIssue = (bodyLines, lineNumber) => {
+    let value = "";
+    let i = lineNumber;
+    if (!bodyLines[i].startsWith("###")) {
+        console.error("not having a section title at line " + i);
+        return null;
+    }
+    i++;
+    while (i < bodyLines.length && !bodyLines[i].startsWith("###")) {
+        value += bodyLines[i] === '' ? '' : bodyLines[i] + "\n";
+        i++;
+    }
+    return value.trim();
+}
+
+/*
+    parse the body of an issues to get the author, need, time charge, description and DoD
+*/
+const parseIssueBody = (body) => {
+    const lines = body.split("\n");
+    const sections = {
+        "En tant que": "actor",
+        "Je veux": "need",
+        "Estimation du temps": "timeCharge",
+        "Description": "description",
+        "Definition of Done (DoD)": "dod",
+    };
+    let data = {};
+    lines.forEach((line, i) => {
+        if (line.startsWith("###")) {
+            const section = sections[line.substring(4)];
+            if (section) {
+                data[section] = getSectionValueFromBodyIssue(lines, i);
+            }
+        }
+    });
+    return data;
+};
+
 const getIssues = async (owner, repo) => {
     
     return (await octokit.request("GET /repos/{owner}/{repo}/issues", {
@@ -65,16 +107,18 @@ export const getDataFromIssues = async (configFile) => {
     let data = getSettings(configFile);
   
     const issues = (await getIssues(data.repository.owner, data.repository.repo)).filter(issue => issue.milestone?.title === data.repository.milestone);
-    let stories = issues.map(issue => ({
+    let stories = issues.map(issue => {
+        const parsed = parseIssueBody(issue.body);
+        return {
         id: issue.number,
         num: '',
         name: issue.title,
-        actor: data.progressReport.members.filter(member => member.ghUsername === issue.assignee.login)[0].name,
-        need: 'machin',
-        description: issue.body,
-        dod: issue.labels.map(label => label.name).join(', '),
-        charge: '2 J/H'
-    }));
+        actor: parsed.actor,
+        need: parsed.need,
+        description: parsed.description,
+        dod: parsed.dod,
+        charge: parsed.timeCharge,
+    }});
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
     const projectsInfo = await Promise.all(projects.map(async (i) => {
         const columns = (await getProjectColumns(i.id)).data;
