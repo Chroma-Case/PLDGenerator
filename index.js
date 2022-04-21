@@ -143,7 +143,7 @@ export const getDataFromIssues = async (configFile) => {
         if (a.num != '' && b.num == '') return -1;
         if (a.num == '' && b.num != '') return 1;
         if (a.num == '' && b.num == '') return 0;
-        return a.num - b.num;
+        return a.num.localeCompare(b.num);
     });
     data.projects = projectsInfo.filter(pI => {
         return pI.tasks.filter(t => t.stories.length > 0).length > 0;
