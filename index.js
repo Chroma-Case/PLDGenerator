@@ -50,11 +50,12 @@ const parseIssueBody = (body) => {
     return data;
 };
 
-const getIssues = async (owner, repo) => {
+const getMilestoneIssues = async (owner, repo, milestoneNumber) => {
     
     return (await octokit.request("GET /repos/{owner}/{repo}/issues", {
         owner: owner,
         repo: repo,
+        milestone_number: milestoneNumber,
     })).data;
 };
 
@@ -97,17 +98,40 @@ const getProjectColumns = async (id) => {
 }
 
 
-const getColumnsCard = async (id) => {
+const getColumnCards = async (id) => {
     return (await octokit.rest.projects.listCards({
             column_id: id,
           }));
 }
 
+const getProjectIssues = async (id) => {
+    let t =  await Promise.all((await getProjectColumns(id)).data.flatMap(async c => {
+        const b = (await getColumnCards(c.id)).data;
+        return b;
+    }));
+    return t.flat();
+}
+
+const reorderProjectIssuesByLabel = (issues) => {
+    const reordered = {};
+    issues.forEach(i => {
+        if (i.labels.length > 0) {
+            const label = i.labels[0];
+            if (!reordered[label]) {
+                reordered[label] = [];
+            }
+            reordered[label].push(i);
+        }
+    });
+    return reordered;
+}
+
+
 export const getDataFromIssues = async (configFile) => {
 
     let data = getSettings(configFile);
   
-    const issues = (await getIssues(data.repository.owner, data.repository.repo)).filter(issue => issue.milestone?.title === data.repository.milestone);
+    const issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, data.repository.milestone));
     let stories = issues.map(issue => {
         const parsed = parseIssueBody(issue.body);
         return {
@@ -119,13 +143,26 @@ export const getDataFromIssues = async (configFile) => {
         description: parsed.description.split('\n').map(l => ({line: l})),
         dod: parsed.dod.split('\n').map(l => ({line: l})),
         charge: parsed.timeCharge,
+        labels: issue.labels.map(l => l.name),
         assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
     }});
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
-    const projectsInfo = await Promise.all(projects.map(async (i) => {
+    const projectIssues = await Promise.all(projects.map(async p => {
+        const taskObj = reorderProjectIssuesByLabel((await getProjectIssues(p.id)).map((c) => {
+            return stories.find(s => parseInt(c.content_url.split("/").pop()) === s.id);
+        }));
+        return {
+            tasks: Object.entries(taskObj).map(([k, v]) => ({name: k, stories: v, num: 3})),
+            name: p.name,
+        };
+    }));
+
+    data.projects = projectIssues;
+
+  /*  const projectsInfo = await Promise.all(projects.map(async (i) => {
         const columns = (await getProjectColumns(i.id)).data;
         const tasks = await Promise.all(columns.map(async (column, j) => {
-            const issueNumbers = (await getColumnsCard(column.id)).data.filter(x => x.content_url != undefined).map(x => x.content_url).map(x => parseInt(x.split("/").pop()))
+            const issueNumbers = (await getColumnCards(column.id)).data.filter(x => x.content_url != undefined).map(x => x.content_url).map(x => parseInt(x.split("/").pop()))
             const tStories = stories.filter(x => issueNumbers.includes(x.id)).map((x, i) => ({name: x.name, id: x.id, num: `${j + 1}.${i + 1}`}));
 
             // we're updating stories numbers to match the order of the tasks (depending on the project and label)
@@ -139,7 +176,7 @@ export const getDataFromIssues = async (configFile) => {
             return {num: j + 1, name: column.name, stories: tStories}
         }))
         return { name: i.name, tasks}
-    }))
+    })) */
     data.stories = stories.sort((a, b) => {
         // elements with num are at the start of the list
         if (a.num != '' && b.num == '') return -1;
@@ -147,9 +184,9 @@ export const getDataFromIssues = async (configFile) => {
         if (a.num == '' && b.num == '') return 0;
         return a.num.localeCompare(b.num);
     });
-    data.projects = projectsInfo.filter(pI => {
-        return pI.tasks.filter(t => t.stories.length > 0).length > 0;
-    });
+    //data.projects = projectsInfo.filter(pI => {
+    //    return pI.tasks.filter(t => t.stories.length > 0).length > 0;
+    //});
     data.progressReport.members.map(m => {
         const memberIssues = issues.filter(i => i.assignees.map(a => a.login).includes(m.ghUsername));
         m.tasks = memberIssues.map(issue => ({name: issue.title}));

@@ -4,7 +4,7 @@
 repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
-  milestone: 'Sprint 1: Test & Learn'
+  milestoneNum: 1
 members:
   - name: 'Louis Auzuret'
     ghUsername: 'GitBluub'
