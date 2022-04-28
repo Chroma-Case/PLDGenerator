@@ -119,7 +119,7 @@ export const getDataFromIssues = async (configFile) => {
         description: parsed.description.split('\n').map(l => ({line: l})),
         dod: parsed.dod.split('\n').map(l => ({line: l})),
         charge: parsed.timeCharge,
-        assignees: issue.assignees.flatMap(a => data.members.filter(m => m.ghUsername === a.login).map(p => p.name)).join(', '),
+        assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
     }});
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
     const projectsInfo = await Promise.all(projects.map(async (i) => {
