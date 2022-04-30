@@ -46,6 +46,13 @@ doc:
       author: 'Clément Le Bihan'
       section: 'Stories'
       comment: 'Réparation de la partie description et Definition of Done'
+
+    - date: '30-04-2022'
+      num: '1.2.8'
+      author: 'Clément Le Bihan'
+      section: 'Stories'
+      comment: "Ajout d'une couleur verte pour indiquer le fait que la storie soit terminée"
+
 lastSprintSummary: "Le séminaire de Forward nous a permis d’assurer, de
 consolider nos idées, et d’ajuster notre valeur proposée sur
 une technologie et une expérience innovante sur le marché.
