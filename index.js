@@ -74,6 +74,7 @@ const getSettings = (configFile) => {
             promo: config.doc.promo,
             ver: config.doc.versions,
         },
+        lastSprintSummary: config.lastSprintSummary,
         progressReport: {
             summary: config.progressReport.summary,
             blockingPoints: config.progressReport.blockingPoints,
@@ -132,7 +133,7 @@ export const getDataFromIssues = async (configFile) => {
     let data = getSettings(configFile);
   
     const issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, data.repository.milestone));
-    let stories = issues.map(issue => {
+    let stories = issues.map((issue, ind) => {
         const parsed = parseIssueBody(issue.body);
         return {
         id: issue.number,
@@ -143,6 +144,7 @@ export const getDataFromIssues = async (configFile) => {
         description: parsed.description.split('\n').map(l => ({line: l})),
         dod: parsed.dod.split('\n').map(l => ({line: l})),
         charge: parsed.timeCharge,
+        done: ind % 2 === 0,
         labels: issue.labels.map(l => l.name),
         assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
     }});
@@ -177,24 +179,6 @@ export const getDataFromIssues = async (configFile) => {
 
     data.projects = projectIssues;
 
-  /*  const projectsInfo = await Promise.all(projects.map(async (i) => {
-        const columns = (await getProjectColumns(i.id)).data;
-        const tasks = await Promise.all(columns.map(async (column, j) => {
-            const issueNumbers = (await getColumnCards(column.id)).data.filter(x => x.content_url != undefined).map(x => x.content_url).map(x => parseInt(x.split("/").pop()))
-            const tStories = stories.filter(x => issueNumbers.includes(x.id)).map((x, i) => ({name: x.name, id: x.id, num: `${j + 1}.${i + 1}`}));
-
-            // we're updating stories numbers to match the order of the tasks (depending on the project and label)
-            let inc = 0;
-            stories.forEach(story => {
-                if (issueNumbers.includes(story.id)) {
-                    story.num = `${i.name} - ${j + 1}.${inc++ + 1}`;
-                }
-            });
-
-            return {num: j + 1, name: column.name, stories: tStories}
-        }))
-        return { name: i.name, tasks}
-    })) */
     data.stories = stories.sort((a, b) => {
         // elements with num are at the start of the list
         if (a.num != '' && b.num == '') return -1;

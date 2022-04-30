@@ -46,6 +46,17 @@ doc:
       author: 'Clément Le Bihan'
       section: 'Stories'
       comment: 'Réparation de la partie description et Definition of Done'
+lastSprintSummary: "Le séminaire de Forward nous a permis d’assurer, de
+consolider nos idées, et d’ajuster notre valeur proposée sur
+une technologie et une expérience innovante sur le marché.
+Nous avons pu augmenter nos compétences en UI/UX en
+présentant nos maquettes et nos échanges nous ont aidé à
+comprendre les enjeux du design et de la production de
+POC. Il nous a également permis de réaliser lorsque nous
+faisions fausse route et donnions trop d’importance à des
+concepts ou des idées peu pertinentes. Les
+encouragements et ses remarques positives ont servi à
+valider et invalider nos décisions."
 progressReport:
   summary: ''
   blockingPoints: ''
