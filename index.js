@@ -147,12 +147,30 @@ export const getDataFromIssues = async (configFile) => {
         assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
     }});
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
+
     const projectIssues = await Promise.all(projects.map(async p => {
         const taskObj = reorderProjectIssuesByLabel((await getProjectIssues(p.id)).map((c) => {
             return stories.find(s => parseInt(c.content_url.split("/").pop()) === s.id);
-        }));
+        }).filter(s => s !== undefined));
+        if (taskObj.length === 0) {
+            return null;
+        }
+        let taskInc = 0;
+        let tasksStoriesNum = [];
         return {
-            tasks: Object.entries(taskObj).map(([k, v]) => ({name: k, stories: v, num: 3})),
+            tasks: Object.entries(taskObj).map(([taskName, taskStories]) => {
+                taskInc++;
+                let inc = 0;
+
+                // updating by reference stories num
+                taskStories.forEach(s => {
+                    inc++;
+                    s.num = `${p.name} - ${taskInc}.${inc}`;
+                    tasksStoriesNum.push(`${taskInc}.${inc}`);
+                });
+
+                return ({name: taskName, stories: taskStories.map((v, i) => ({...v, num: tasksStoriesNum[i]})), num: taskInc})
+            }),
             name: p.name,
         };
     }));
