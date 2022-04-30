@@ -156,11 +156,11 @@ export const getDataFromIssues = async (configFile) => {
             return null;
         }
         let taskInc = 0;
-        let tasksStoriesNum = [];
         return {
             tasks: Object.entries(taskObj).map(([taskName, taskStories]) => {
                 taskInc++;
                 let inc = 0;
+                let tasksStoriesNum = [];
 
                 // updating by reference stories num
                 taskStories.forEach(s => {
