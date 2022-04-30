@@ -55,8 +55,9 @@ const getMilestoneIssues = async (owner, repo, milestoneNumber) => {
     return (await octokit.request("GET /repos/{owner}/{repo}/issues", {
         owner: owner,
         repo: repo,
-        milestone_number: milestoneNumber,
-    })).data;
+        state: "all",
+        per_page: 100,
+    })).data.filter(i => i.milestone && i.milestone.number === milestoneNumber);
 };
 
 const getSettings = (configFile) => {
@@ -132,8 +133,8 @@ export const getDataFromIssues = async (configFile) => {
 
     let data = getSettings(configFile);
   
-    const issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, data.repository.milestone));
-    let stories = issues.map((issue, ind) => {
+    const issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, parseInt(data.repository.milestoneNum)));
+    let stories = issues.map((issue) => {
         const parsed = parseIssueBody(issue.body);
         return {
         id: issue.number,
@@ -144,7 +145,7 @@ export const getDataFromIssues = async (configFile) => {
         description: parsed.description.split('\n').map(l => ({line: l})),
         dod: parsed.dod.split('\n').map(l => ({line: l})),
         charge: parsed.timeCharge,
-        done: ind % 2 === 0,
+        done: issue.state === 'closed',
         labels: issue.labels.map(l => l.name),
         assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
     }});
