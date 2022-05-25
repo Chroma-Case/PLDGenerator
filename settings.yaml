@@ -13,7 +13,9 @@ members:
   - name: 'Arthur Jamet'
     ghUsername: 'Arthi-chaud'
   - name: 'Clément Le Bihan'
-    ghUsername: 'Octopus773' 
+    ghUsername: 'Octopus773'
+  - name: 'Amaury Danis Cousandier'
+    ghUsername: 'AmauryDanisCousandier'
 doc:
   title: "PLD - Sprint Test & Learn"
   object: "PLD du sprint Test & Learn"
@@ -52,6 +54,12 @@ doc:
       author: 'Clément Le Bihan'
       section: 'Stories'
       comment: "Ajout d'une couleur verte pour indiquer le fait que la storie soit terminée"
+      
+    - date: '25-05-2022'
+      num: '1.2.9'
+      author: 'Clément Le Bihan'
+      section: 'Membres & Stories'
+      comment: "Ajout d'Amaury dans le PLD et réassignation des personnes en conséquence"
 
 lastSprintSummary: "Le séminaire de Forward nous a permis d’assurer, de
 consolider nos idées, et d’ajuster notre valeur proposée sur
