@@ -4,7 +4,7 @@
 repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
-  milestoneNum: 1
+  milestoneNum: 2
 members:
   - name: 'Louis Auzuret'
     ghUsername: 'GitBluub'
@@ -16,6 +16,10 @@ members:
     ghUsername: 'Octopus773'
   - name: 'Amaury Danis Cousandier'
     ghUsername: 'AmauryDanisCousandier'
+  - name: 'Chloé Chauvin'
+    ghUsername: 'Nekory23'
+  - name: 'Quentin Treheux'
+    ghUsername: 'LuciferBahamut'
 doc:
   title: "PLD - Sprint Test & Learn"
   object: "PLD du sprint Test & Learn"
@@ -60,6 +64,12 @@ doc:
       author: 'Clément Le Bihan'
       section: 'Membres & Stories'
       comment: "Ajout d'Amaury dans le PLD et réassignation des personnes en conséquence"
+
+    - date: '11-07-2022'
+      num: '1.3.2'
+      author: 'Clément Le Bihan'
+      section: 'Membres & Stories'
+      comment: "Ajout de Chloé et Quentin dans le PLD et réassignation des personnes en conséquence"
 
 lastSprintSummary: "Le séminaire de Forward nous a permis d’assurer, de
 consolider nos idées, et d’ajuster notre valeur proposée sur
