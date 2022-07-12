@@ -57,7 +57,7 @@ const getMilestoneIssues = async (owner, repo, milestoneNumber) => {
         repo: repo,
         state: "all",
         per_page: 100,
-    })).data.filter(i => i.milestone && i.milestone.number === milestoneNumber);
+    })).data.filter(i => i.milestone && i.milestone.number === milestoneNumber && !("pull_request" in i));
 };
 
 const getSettings = (configFile) => {
