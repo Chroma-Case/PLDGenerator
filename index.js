@@ -141,7 +141,12 @@ export const getDataFromIssues = async (configFile) => {
 
     let data = getSettings(configFile);
   
-    const issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, parseInt(data.repository.milestoneNum)));
+    let issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, parseInt(data.repository.milestoneNum)));    
+    issues = issues.filter(i => {
+        if (!i.labels.length) return true;
+        return !i.labels.some(l => data.repository.ignoredLabels.includes(l.name));
+    })
+
     let stories = issues.map((issue) => {
         const parsed = parseIssueBody(issue.body);
         return {

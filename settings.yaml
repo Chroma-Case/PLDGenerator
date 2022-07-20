@@ -5,6 +5,10 @@ repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
   milestoneNum: 2
+  ignoredLabels:
+    - 'ignored'
+    - 'Draft'
+
 members:
   - name: 'Louis Auzuret'
     ghUsername: 'GitBluub'
