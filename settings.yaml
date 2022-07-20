@@ -20,6 +20,11 @@ members:
     ghUsername: 'Nekory23'
   - name: 'Quentin Treheux'
     ghUsername: 'LuciferBahamut'
+sprint:
+    name: "Sprint Test & Learn"
+    # dateFormat: 'DD-MM-YYYY'
+    start: '01-07-2022'
+    end: '30-09-2022'
 doc:
   title: "PLD - Sprint Test & Learn"
   object: "PLD du sprint Test & Learn"

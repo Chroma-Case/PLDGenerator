@@ -2,11 +2,18 @@ import { Octokit, App } from "octokit";
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import 'dotenv/config'
+import moment from 'moment';
 
 const octokit = new Octokit({
     userAgent: "my-app/v1.2.3",
     auth: process.env.GITHUB_PERSONAL_TOKEN
 });
+
+moment.locale('fr');
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 /*
     Get the value that is under the ### <title> specified by lineNumber until finding another title or the end of the body
@@ -75,6 +82,7 @@ const getSettings = (configFile) => {
             promo: config.doc.promo,
             ver: config.doc.versions,
         },
+        sprint: config.sprint,
         lastSprintSummary: config.lastSprintSummary,
         progressReport: {
             summary: config.progressReport.summary,
@@ -195,5 +203,12 @@ export const getDataFromIssues = async (configFile) => {
         m.tasks = memberIssues.map(issue => ({name: issue.title}));
         return m;
     })
+    {
+        const parseDateFormat = "DD-MM-YYYY";
+        const dateStart = moment(data.sprint.start, parseDateFormat);
+        const dateEnd = moment(data.sprint.end, parseDateFormat);
+        const displayFormat = (dateStart.format("YYYY") === dateEnd.format("YYYY")) ? 'MMMM' : 'MMMM YYYY';
+        data.sprint.displayTimePeriod = `${capitalizeFirstLetter(dateStart.format(displayFormat))} - ${capitalizeFirstLetter(dateEnd.format('MMMM YYYY'))}`;
+    }
     return data;
 }
