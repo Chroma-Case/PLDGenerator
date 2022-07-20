@@ -88,7 +88,7 @@ const getSettings = (configFile) => {
             summary: config.progressReport.summary,
             blockingPoints: config.progressReport.blockingPoints,
             conclusion: config.progressReport.conclusion,
-            members: config.members.map(m => ({name: m.name, ghUsername: m.ghUsername, tasks: []})),
+            members: config.members.map(m => ({name: m.name, ghUsername: m.ghUsername, tasks: [], chargeDone: 0, chargeTotal: 0})),
         },
         projects: []
     }
@@ -149,6 +149,17 @@ export const getDataFromIssues = async (configFile) => {
 
     let stories = issues.map((issue) => {
         const parsed = parseIssueBody(issue.body);
+        const timeCharge = parseFloat(parsed.timeCharge);
+        issue.assignees.forEach(a => {
+            const member = data.progressReport.members.find(m => m.ghUsername === a.login);
+            if (!member) {
+                return;
+            }
+            if (issue.state === "closed") {
+                member.chargeDone += timeCharge /  issue.assignees.length;
+            }
+            member.chargeTotal += timeCharge /  issue.assignees.length;
+        });
         return {
         id: issue.number,
         num: '',
@@ -157,7 +168,8 @@ export const getDataFromIssues = async (configFile) => {
         need: parsed.need,
         description: parsed.description.split('\n').map(l => ({line: l})),
         dod: parsed.dod.split('\n').map(l => ({line: l})),
-        charge: parsed.timeCharge,
+        // timeCharge ex : "2J/H", "0.6 J/H"
+        charge: timeCharge,
         done: issue.state === 'closed',
         labels: issue.labels.map(l => l.name),
         assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
