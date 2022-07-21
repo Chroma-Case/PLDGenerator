@@ -225,7 +225,7 @@ export const getDataFromIssues = async (configFile) => {
     //});
     data.progressReport.members.map(m => {
         const memberIssues = issues.filter(i => i.assignees.map(a => a.login).includes(m.ghUsername));
-        m.tasks = memberIssues.map(issue => ({name: issue.title}));
+        m.tasks = memberIssues.map(issue => ({name: issue.title, done: issue.state === 'closed'}));
         return m;
     })
     {
