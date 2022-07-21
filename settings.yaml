@@ -25,13 +25,13 @@ members:
   - name: 'Quentin Treheux'
     ghUsername: 'LuciferBahamut'
 sprint:
-    name: "Sprint Test & Learn"
+    name: "Sprint Management & Process"
     # dateFormat: 'DD-MM-YYYY'
     start: '01-07-2022'
     end: '30-09-2022'
 doc:
-  title: "PLD - Sprint Test & Learn"
-  object: "PLD du sprint Test & Learn"
+  title: "PLD - Sprint Management & Process"
+  object: "PLD du sprint Management & Process"
   author: "Clément LE BIHAN"
   manager: "Zoe Roux"
   email: "zoe1.roux@epitech.eu"
@@ -79,6 +79,12 @@ doc:
       author: 'Clément Le Bihan'
       section: 'Membres & Stories'
       comment: "Ajout de Chloé et Quentin dans le PLD et réassignation des personnes en conséquence"
+    
+    - date: '21-07-2022'
+      num: '1.4.0'
+      author: 'Clément Le Bihan'
+      section: 'Stories'
+      comment: "Ajout de la somme des J/H"
 
 lastSprintSummary: "Le séminaire de Forward nous a permis d’assurer, de
 consolider nos idées, et d’ajuster notre valeur proposée sur
