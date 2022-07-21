@@ -184,22 +184,29 @@ export const getDataFromIssues = async (configFile) => {
             return null;
         }
         let taskInc = 0;
+        const projectTasks = Object.entries(taskObj).map(([taskName, taskStories]) => {
+            taskInc++;
+            let inc = 0;
+            let tasksStoriesNum = [];
+
+            // updating by reference stories num
+            taskStories.forEach(s => {
+                inc++;
+                s.num = `${p.name} - ${taskInc}.${inc}`;
+                tasksStoriesNum.push(`${taskInc}.${inc}`);
+            });
+
+            return ({
+                name: taskName,
+                stories: taskStories.map((v, i) => ({...v, num: tasksStoriesNum[i]})),
+                num: taskInc,
+                charge: taskStories.reduce((acc, s) => acc + s.charge, 0),
+            });
+        });
         return {
-            tasks: Object.entries(taskObj).map(([taskName, taskStories]) => {
-                taskInc++;
-                let inc = 0;
-                let tasksStoriesNum = [];
-
-                // updating by reference stories num
-                taskStories.forEach(s => {
-                    inc++;
-                    s.num = `${p.name} - ${taskInc}.${inc}`;
-                    tasksStoriesNum.push(`${taskInc}.${inc}`);
-                });
-
-                return ({name: taskName, stories: taskStories.map((v, i) => ({...v, num: tasksStoriesNum[i]})), num: taskInc})
-            }),
+            tasks: projectTasks,
             name: p.name,
+            charge: projectTasks.reduce((acc, t) => acc + t.charge, 0),
         };
     }));
 
