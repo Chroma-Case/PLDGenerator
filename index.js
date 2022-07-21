@@ -211,6 +211,7 @@ export const getDataFromIssues = async (configFile) => {
     }));
 
     data.projects = projectIssues;
+    data.sprintCharge = projectIssues.reduce((acc, s) => acc + s.charge, 0);
 
     data.stories = stories.sort((a, b) => {
         // elements with num are at the start of the list
