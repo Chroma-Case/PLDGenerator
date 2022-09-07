@@ -1,19 +1,30 @@
 import * as fs from 'fs';
 import * as carbone from 'carbone';
 
-const dataUtils = await import('./index.js');
+import prompts from 'prompts';
 
-const data = await dataUtils.getDataFromIssues('./settings.yaml');
+import { printSummarizePLD } from './index.js';
 
-// Data to inject
+const main = async () => {
+    const dataUtils = await import('./index.js');
+    const data = await dataUtils.getDataFromIssues('./settings.yaml');
 
-// Generate a report using the sample template provided by carbone module
-// This LibreOffice template contains "Hello {d.firstname} {d.lastname} !"
-// Of course, you can create your own templates!
-carbone.default.render('./pld.odt', data, function(err, result){
-if (err) {
-    return console.error(err);
+    printSummarizePLD(data);
+
+    const response = await prompts({
+        type: 'text',
+        name: 'answer',
+        message: 'Do you want to generate a report? (N/y)',
+      });
+    if (response.answer === 'y' || response.answer === 'Y') {
+        carbone.default.render('./pld.odt', data, function(err, result){
+        if (err) {
+            return console.error(err);
+        }
+        fs.writeFileSync('result.odt', result);
+        });
+    }
+    
 }
-    // write the result
-    fs.writeFileSync('result.odt', result);
-});
+
+main();
