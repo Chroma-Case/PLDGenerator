@@ -15,6 +15,26 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+const printIssue = (issue) => {
+    const title = issue.title;
+    const labels = issue.labels.map(label => label.name);
+    const assignees = issue.assignees.map(assignee => assignee.login);
+    const milestone = issue.milestone ? issue.milestone.title : '';
+    const state = issue.state;
+    const createdAt = moment(issue.created_at).format('LL');
+    const updatedAt = moment(issue.updated_at).format('LL');
+    const closedAt = issue.closed_at ? moment(issue.closed_at).format('LL') : '';
+    const body = issue.body;
+    const url = issue.html_url;
+    const number = issue.number;
+    const comments = issue.comments;
+    const author = issue.user.login;
+    const authorUrl = issue.user.html_url;
+    const authorAvatar = issue.user.avatar_url;
+    const authorType = issue.user.type;
+    const authorSiteAdmin = issue.user.site_admin;
+}
+
 /*
     Get the value that is under the ### <title> specified by lineNumber until finding another title or the end of the body
 */
@@ -139,12 +159,17 @@ const reorderProjectIssuesByLabel = (issues) => {
 
 export const getDataFromIssues = async (configFile) => {
 
-    let data = getSettings(configFile);
+    const data = getSettings(configFile);
   
-    let issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, parseInt(data.repository.milestoneNum)));    
+    let issues = (await getMilestoneIssues(data.repository.owner, data.repository.repo, parseInt(data.repository.milestoneNum)));
+    data.ignoredIssues = [];
     issues = issues.filter(i => {
         if (!i.labels.length) return true;
-        return !i.labels.some(l => data.repository.ignoredLabels.includes(l.name));
+        if (!i.labels.some(l => data.repository.ignoredLabels.includes(l.name))) {
+            return true;
+        }
+        data.ignoredIssues.push(i);
+        return false;
     })
 
     let stories = issues.map((issue) => {
@@ -236,4 +261,25 @@ export const getDataFromIssues = async (configFile) => {
         data.sprint.displayTimePeriod = `${capitalizeFirstLetter(dateStart.format(displayFormat))} - ${capitalizeFirstLetter(dateEnd.format('MMMM YYYY'))}`;
     }
     return data;
+}
+
+// print the summary of the PLD in a table
+// one member per line, with the number of tasks done and the number of tasks total and their charge in J/H
+// print ignored issues and if they're closed or not
+export const printSummarizePLD = (data) => {
+    console.log("Summary of the PLD, milestone : " + data.repository.milestoneNum);
+    console.log(`
+    Number of stories: ${data.stories.length}
+    ${data.sprint.displayTimePeriod}
+    ${data.sprintCharge} J/H
+    `);
+    console.log(`Ignored issues (${data.ignoredIssues.length})`);
+    data.ignoredIssues.forEach(i => {
+        console.log(`${i.state.padEnd(5)} - ${i.title}`);
+    });
+    console.log("");
+    console.log(`Members (${data.progressReport.members.length})`);
+    data.progressReport.members.forEach(m => {
+        console.log(`${m.name.padEnd(30)} - ${m.chargeDone.toString().padStart(3)} / ${m.chargeTotal.toString().padEnd(3)} J/H   ${m.tasks.length.toString().padEnd(2)} tasks`);
+    });
 }
