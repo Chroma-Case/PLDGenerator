@@ -15,26 +15,6 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const printIssue = (issue) => {
-    const title = issue.title;
-    const labels = issue.labels.map(label => label.name);
-    const assignees = issue.assignees.map(assignee => assignee.login);
-    const milestone = issue.milestone ? issue.milestone.title : '';
-    const state = issue.state;
-    const createdAt = moment(issue.created_at).format('LL');
-    const updatedAt = moment(issue.updated_at).format('LL');
-    const closedAt = issue.closed_at ? moment(issue.closed_at).format('LL') : '';
-    const body = issue.body;
-    const url = issue.html_url;
-    const number = issue.number;
-    const comments = issue.comments;
-    const author = issue.user.login;
-    const authorUrl = issue.user.html_url;
-    const authorAvatar = issue.user.avatar_url;
-    const authorType = issue.user.type;
-    const authorSiteAdmin = issue.user.site_admin;
-}
-
 /*
     Get the value that is under the ### <title> specified by lineNumber until finding another title or the end of the body
 */
