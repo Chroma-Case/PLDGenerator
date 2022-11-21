@@ -153,6 +153,7 @@ export const getDataFromIssues = async (configFile) => {
     })
 
     let stories = issues.map((issue) => {
+        try {
         const parsed = parseIssueBody(issue.body);
         const timeCharge = parseFloat(parsed.timeCharge);
         issue.assignees.forEach(a => {
@@ -178,7 +179,12 @@ export const getDataFromIssues = async (configFile) => {
         done: issue.state === 'closed',
         labels: issue.labels.map(l => l.name),
         assignees: issue.assignees.map(a => data.members.find(m => m.ghUsername === a.login)?.name ?? a.login).join(', '),
-    }});
+    }}
+    catch (e) {
+        console.log("Error parsing issue " + issue.number);
+        console.log(e);
+        return null;
+    }}).filter(i => i !== null);
     const projects = (await getProjects(data.repository.owner, data.repository.repo)).data;
 
     const projectIssues = await Promise.all(projects.map(async p => {

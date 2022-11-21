@@ -4,7 +4,7 @@
 repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
-  milestoneNum: 2
+  milestoneNum: 5
   ignoredLabels:
     - 'ignored'
     - 'Draft'
@@ -25,13 +25,13 @@ members:
   - name: 'Quentin Treheux'
     ghUsername: 'LuciferBahamut'
 sprint:
-    name: "Sprint Management & Process"
+    name: "Sprint Fast Forward"
     # dateFormat: 'DD-MM-YYYY'
-    start: '01-07-2022'
-    end: '30-09-2022'
+    start: '31-10-2022'
+    end: '02-01-2023'
 doc:
-  title: "PLD - Sprint Management & Process"
-  object: "PLD du sprint Management & Process"
+  title: "PLD - Sprint Fast Forward"
+  object: "PLD du sprint Fast Forward"
   author: "Clément LE BIHAN"
   manager: "Zoe Roux"
   email: "zoe1.roux@epitech.eu"
