@@ -4,7 +4,7 @@
 repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
-  milestoneNum: 5
+  milestoneNum: 6
   ignoredLabels:
     - 'ignored'
     - 'Draft'
@@ -27,64 +27,23 @@ members:
 sprint:
     name: "Sprint Fast Forward"
     # dateFormat: 'DD-MM-YYYY'
-    start: '31-10-2022'
-    end: '02-01-2023'
+    start: '02-01-2023'
+    end: '25-05-2023'
 doc:
-  title: "PLD - Sprint Fast Forward"
-  object: "PLD du sprint Fast Forward"
+  title: "PLD - Sprint Beta & Growth Hacking"
+  object: "PLD du sprint Beta & Growth Hacking"
   author: "Clément LE BIHAN"
   manager: "Zoe Roux"
   email: "zoe1.roux@epitech.eu"
   keywords: 'User stories, fonctionnalités, tâches, sprint, DoD'
   promo: '2024'
   versions: 
-    - date: '12-04-2022'
-      num: '0.6.4'
-      author: 'Arthur Jamet'
-      section: 'Toutes'
-      comment: 'Création du modèle'
-    
-    - date: '15-04-2022'
-      num: '0.7.2'
+    - date: '13-02-2023'
+      num: '2.0'
       author: 'Clément Le Bihan'
       section: 'Toutes'
-      comment: 'Première version'
+      comment: 'Nettoyage des détails de version'
     
-    - date: '20-04-2022'
-      num: '0.8.1'
-      author: 'Zoe Roux'
-      section: 'Sommmaire'
-      comment: 'Ajout du sommmaire'
-
-    - date: '21-04-2022'
-      num: '1.0.0'
-      author: 'Clément Le Bihan'
-      section: 'Stories'
-      comment: 'Réparation de la partie description et Definition of Done'
-
-    - date: '30-04-2022'
-      num: '1.2.8'
-      author: 'Clément Le Bihan'
-      section: 'Stories'
-      comment: "Ajout d'une couleur verte pour indiquer le fait que la storie soit terminée"
-      
-    - date: '25-05-2022'
-      num: '1.2.9'
-      author: 'Clément Le Bihan'
-      section: 'Membres & Stories'
-      comment: "Ajout d'Amaury dans le PLD"
-
-    - date: '11-07-2022'
-      num: '1.3.2'
-      author: 'Clément Le Bihan'
-      section: 'Membres & Stories'
-      comment: "Ajout de Chloé et Quentin dans le PLD et réassignation des personnes en conséquence"
-    
-    - date: '21-07-2022'
-      num: '1.4.0'
-      author: 'Clément Le Bihan'
-      section: 'Stories'
-      comment: "Ajout de la somme des J/H"
 
 lastSprintSummary: "Le séminaire de Forward nous a permis d’assurer, de
 consolider nos idées, et d’ajuster notre valeur proposée sur
