@@ -136,6 +136,20 @@ const reorderProjectIssuesByLabel = (issues) => {
     return reordered;
 }
 
+const getTimeChargeData = (timeChargeDatyBody) => {
+    const l = timeChargeDatyBody;
+    let timeCharge = 0;
+    let timeChargeDone = 0;
+    const parts = l.split("/");
+    if (parts.length === 3) {
+        const [a, b, _c] = parts;
+        timeCharge += parseFloat(b);
+        timeChargeDone += parseFloat(a);
+        return {timeCharge, timeChargeDone: timeChargeDone < 0 ? 0 : timeChargeDone};
+    }
+    timeCharge += parseFloat(l);
+    return {timeCharge, timeChargeDone};
+}
 
 export const getDataFromIssues = async (configFile) => {
 
@@ -155,16 +169,18 @@ export const getDataFromIssues = async (configFile) => {
     let stories = issues.map((issue) => {
         try {
         const parsed = parseIssueBody(issue.body);
-        const timeCharge = parseFloat(parsed.timeCharge);
+        const {timeCharge, timeChargeDone} = getTimeChargeData(parsed.timeCharge);
         issue.assignees.forEach(a => {
             const member = data.progressReport.members.find(m => m.ghUsername === a.login);
             if (!member) {
                 return;
             }
-            if (issue.state === "closed") {
-                member.chargeDone += timeCharge /  issue.assignees.length;
+            if (timeChargeDone > 0) {
+                member.chargeDone += timeChargeDone / issue.assignees.length;
+            } else if (issue.state === "closed") {
+                member.chargeDone += timeCharge / issue.assignees.length;
             }
-            member.chargeTotal += timeCharge /  issue.assignees.length;
+            member.chargeTotal += timeCharge / issue.assignees.length;
         });
         return {
         id: issue.number,
