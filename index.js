@@ -58,13 +58,21 @@ const parseIssueBody = (body) => {
 };
 
 const getMilestoneIssues = async (owner, repo, milestoneNumber) => {
-    
-    return (await octokit.request("GET /repos/{owner}/{repo}/issues", {
+
+    const iterator = octokit.paginate.iterator(octokit.rest.issues.listForRepo, {
         owner: owner,
         repo: repo,
         state: "all",
         per_page: 100,
-    })).data.filter(i => i.milestone && i.milestone.number === milestoneNumber && !("pull_request" in i));
+    });
+
+    let total_issues = [];
+
+    for await (const { data: issues } of iterator) {
+        total_issues = total_issues.concat(issues);
+    }
+
+    return total_issues.filter(i => i.milestone && i.milestone.number === milestoneNumber && !("pull_request" in i));
 };
 
 const getSettings = (configFile) => {

@@ -4,7 +4,7 @@
 repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
-  milestoneNum: 6
+  milestoneNum: 7
   ignoredLabels:
     - 'ignored'
     - 'Draft'
@@ -20,18 +20,16 @@ members:
     ghUsername: 'Octopus773'
   - name: 'Amaury Danis Cousandier'
     ghUsername: 'AmauryDanisCousandier'
-  - name: 'Chloé Chauvin'
-    ghUsername: 'Nekory23'
-  - name: 'Quentin Treheux'
-    ghUsername: 'LuciferBahamut'
+  - name: 'Mathys Paul'
+    ghUsername: 'mathysPaul'
 sprint:
-    name: "Sprint Fast Forward"
+    name: "Sprint Consolidation"
     # dateFormat: 'DD-MM-YYYY'
-    start: '02-01-2023'
-    end: '25-05-2023'
+    start: '26-05-2023'
+    end: '10-09-2023'
 doc:
-  title: "PLD - Sprint Beta & Growth Hacking"
-  object: "PLD du sprint Beta & Growth Hacking"
+  title: "PLD - Sprint Consolidation"
+  object: "PLD du sprint de Consolidation"
   author: "Clément LE BIHAN"
   manager: "Zoe Roux"
   email: "zoe1.roux@epitech.eu"
