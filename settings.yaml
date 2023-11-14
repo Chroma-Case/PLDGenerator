@@ -4,7 +4,7 @@
 repository:
   owner: 'Chroma-Case'
   repo: 'Chromacase'
-  milestoneNum: 7
+  milestoneNum: 10
   ignoredLabels:
     - 'ignored'
     - 'Draft'
@@ -23,13 +23,13 @@ members:
   - name: 'Mathys Paul'
     ghUsername: 'mathysPaul'
 sprint:
-    name: "Sprint Consolidation"
+    name: "Sprint Launch & Metric"
     # dateFormat: 'DD-MM-YYYY'
-    start: '26-05-2023'
-    end: '10-09-2023'
+    start: '11-09-2023'
+    end: '19-01-2024'
 doc:
-  title: "PLD - Sprint Consolidation"
-  object: "PLD du sprint de Consolidation"
+  title: "PLD - Sprint Launch & Metric"
+  object: "PLD du sprint de Launch & Metric"
   author: "Clément LE BIHAN"
   manager: "Zoe Roux"
   email: "zoe1.roux@epitech.eu"
